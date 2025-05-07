@@ -48,4 +48,29 @@ The aim is to forecast future climate conditions and intergrate coursework from 
 </ul>
 
 
+## Technologies
+
+ <ul>
+  <li>Python, Jupyter</li>
+  <li>Libraries: pandas, numpy, sklearn, statsmodels, scipy, seaborn, matplotlib, pymongo</li>
+  <li>MongoDB for NoSQL storage</li>
+  <li>Linear programming (scipy.optimize)</li>
+  <li>Hashlib and logging for audit</li>
+ </ul>
+
+## Results
+
+<ul>
+ <li>Forecasting achieved **R² > 0.85** using Random Forest Regressor.</li>
+ <li>Simulated random walk models and time series analysis indicate increasing variability in climate patterns.</li>
+ <li>Hypothesis tests confirmed significant differences in key climate variables across counties.</li>
+ <li>Budget optimization model provides a cost-efficient resource distribution plan.</li>
+</ul>
+
+## How to Run
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Droc-sid/climate-change-kenya.git
+   cd climate-change-kenya
+
 
