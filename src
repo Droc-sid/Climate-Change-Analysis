@@ -1,1 +1,108 @@
 
+# src/stochastic_model.py
+import numpy as np
+import matplotlib.pyplot as plt
+
+def generate_random_walk(n_steps=1000, start=0):
+    steps = np.random.choice([-1, 1], size=n_steps)
+    return np.cumsum(np.insert(steps, 0, start))
+
+def simulate_random_walks(num_simulations=10, n_steps=1000):
+    walks = [generate_random_walk(n_steps) for _ in range(num_simulations)]
+    return np.array(walks)
+
+def plot_random_walks(walks):
+    plt.figure(figsize=(12, 6))
+    for walk in walks:
+        plt.plot(walk)
+    plt.title("Simulated Random Walks")
+    plt.xlabel("Time Steps")
+    plt.ylabel("Value")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+# src/ml_model.py
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+
+def train_rf_model(df, feature_cols, target_col):
+    X = df[feature_cols]
+    y = df[target_col]
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    model.fit(X_train, y_train)
+    return model, X_test, y_test
+
+def evaluate_model(model, X_test, y_test):
+    predictions = model.predict(X_test)
+    rmse = mean_squared_error(y_test, predictions, squared=False)
+    r2 = r2_score(y_test, predictions)
+    return rmse, r2
+
+# src/nosql_integration.py
+from pymongo import MongoClient
+import pandas as pd
+
+def insert_data_to_mongodb(df, db_name="climate_db", collection_name="climate_records"):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client[db_name]
+    collection = db[collection_name]
+    records = df.to_dict(orient="records")
+    collection.insert_many(records)
+    print(f"Inserted {len(records)} records into MongoDB.")
+
+def fetch_data_from_mongodb(db_name="climate_db", collection_name="climate_records"):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client[db_name]
+    collection = db[collection_name]
+    data = list(collection.find())
+    return pd.DataFrame(data)
+
+# src/hypothesis_testing.py
+from scipy import stats
+
+def compare_means(df, county1, county2, variable):
+    data1 = df[df['county'] == county1][variable].dropna()
+    data2 = df[df['county'] == county2][variable].dropna()
+    t_stat, p_value = stats.ttest_ind(data1, data2, equal_var=False)
+    return t_stat, p_value
+
+def interpret_p_value(p_value, alpha=0.05):
+    if p_value < alpha:
+        return "Reject the null hypothesis: There is a significant difference."
+    else:
+        return "Fail to reject the null hypothesis: No significant difference."
+
+# src/operations_research.py
+import numpy as np
+from scipy.optimize import linprog
+
+def optimize_budget_allocation(costs, constraints_lhs, constraints_rhs):
+    result = linprog(c=costs, A_ub=constraints_lhs, b_ub=constraints_rhs, method='highs')
+    if result.success:
+        return result.x, result.fun
+    else:
+        return None, None
+
+# src/information_systems_audit.py
+import hashlib
+import logging
+
+# Configure basic logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Simulate integrity check of files
+
+def generate_file_hash(filepath):
+    with open(filepath, 'rb') as file:
+        file_hash = hashlib.sha256()
+        while chunk := file.read(4096):
+            file_hash.update(chunk)
+    return file_hash.hexdigest()
+
+# Log access and operations for audit trail
+
+def log_access(event_desc):
+    logging.info(f"Audit Log - Event: {event_desc}")
